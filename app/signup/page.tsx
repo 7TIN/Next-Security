@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const supabase = createClientComponentClient();
   const router = useRouter();
 
@@ -14,14 +14,17 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${location.origin}/auth/callback`,
+      },
     });
 
     setLoading(false);
@@ -29,11 +32,11 @@ export default function LoginPage() {
     if (error) {
       setErrorMsg(error.message);
     } else {
-      router.push('/profile');
+      router.push('/login'); // optional: page to say "check your email"
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignup = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -53,13 +56,13 @@ export default function LoginPage() {
       </Link>
 
       <div className="w-full max-w-sm bg-gray-50 p-6 rounded-md shadow-md">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Login</h2>
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">Sign Up</h2>
 
         {errorMsg && (
           <div className="mb-4 text-red-600 text-sm">{errorMsg}</div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleSignup} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
@@ -83,14 +86,15 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Signing up...' : 'Sign Up'}
           </button>
         </form>
 
         <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600"> Dont have an account?{' '}
-            <Link href="/signup" className="text-blue-600 hover:underline">
-              Sign up
+          <p className="text-sm text-gray-600">
+            Already have an account?{' '}
+            <Link href="/login" className="text-blue-600 hover:underline">
+              Login
             </Link>
           </p>
         </div>
@@ -98,7 +102,7 @@ export default function LoginPage() {
         <div className="my-4 text-center text-gray-500">or</div>
 
         <button
-          onClick={handleGoogleLogin}
+          onClick={handleGoogleSignup}
           className="w-full py-2 border rounded-md hover:bg-gray-100"
         >
           Continue with Google

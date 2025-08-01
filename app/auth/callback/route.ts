@@ -1,6 +1,7 @@
 // app/auth/callback/route.ts
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { getSupabaseRouteHandler } from '@/app/lib/supabase';
+// import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+// import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -9,7 +10,10 @@ export async function GET(req: NextRequest) {
 
   if (code) {
     // Create a Supabase client that can read/write cookies
-    const supabase = createRouteHandlerClient({ cookies });
+    // const supabase = createRouteHandlerClient({ cookies });
+
+    const supabase = getSupabaseRouteHandler();
+
     // Exchange the auth code for a user session
     await supabase.auth.exchangeCodeForSession(code);
   }

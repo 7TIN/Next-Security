@@ -1,16 +1,17 @@
 // app/page.tsx
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { signOut } from '@/app/lib/actions';
+import { getSupabaseServerComponent } from './lib/supabase';
 // import { signOut } from '@/lib/actions'; // Import the server action
 
 export default async function HomePage() {
-  const supabase = createServerComponentClient({ cookies });
-
+  // const supabase = createServerComponentClient({ cookies });
+  const supabase = getSupabaseServerComponent();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -18,10 +19,10 @@ export default async function HomePage() {
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
           Welcome to Your App
         </h1>
-        {session ? (
+        {user ? (
           <div>
             <p className="text-lg text-gray-600 mb-6">
-              You are logged in as <span className="font-semibold">{session.user.email}</span>.
+              You are logged in as <span className="font-semibold">{user.email}</span>.
             </p>
             <div className="flex flex-col space-y-4">
                <Link href="/profile" className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
