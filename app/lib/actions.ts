@@ -12,7 +12,7 @@ import { getSupabaseServerAction } from './supabase';
 
 export async function signOut() {
 //   const supabase = createServerActionClient({ cookies });
-  const supabase = getSupabaseServerAction();
+  const supabase = await getSupabaseServerAction();
 
   await supabase.auth.signOut();
   redirect('/login');
@@ -28,7 +28,7 @@ export async function updateUsername(userId: string, username: string) {
         throw new Error("Username must be at least 3 characters long.");
     }
     
-    const supabase = getSupabaseServerAction();
+    const supabase = await getSupabaseServerAction();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {

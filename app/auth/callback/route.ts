@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     // Create a Supabase client that can read/write cookies
     // const supabase = createRouteHandlerClient({ cookies });
 
-    const supabase = getSupabaseRouteHandler();
+    const supabase = await getSupabaseRouteHandler();
 
     // Exchange the auth code for a user session
     await supabase.auth.exchangeCodeForSession(code);
