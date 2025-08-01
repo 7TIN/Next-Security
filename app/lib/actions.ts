@@ -1,8 +1,8 @@
 // lib/actions.ts
 'use server';
 
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+// import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
+// import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import prisma from './prisma';
 import { revalidatePath } from 'next/cache';
@@ -19,8 +19,6 @@ export async function signOut() {
 }
 
 
-// --- PROFILE ACTIONS ---
-
 export async function updateUsername(userId: string, username: string) {
     if (!userId) {
         throw new Error("User not found.");
@@ -30,8 +28,7 @@ export async function updateUsername(userId: string, username: string) {
         throw new Error("Username must be at least 3 characters long.");
     }
     
-    // In case the trigger failed, we need the user's email for the create operation
-    const supabase = createServerActionClient({ cookies });
+    const supabase = getSupabaseServerAction();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
@@ -39,23 +36,21 @@ export async function updateUsername(userId: string, username: string) {
     }
 
     try {
-        // Use upsert: update if profile exists, create if it doesn't.
         await prisma.profile.upsert({
             where: {
                 id: userId,
             },
-            // What to do if the record is found
             update: {
                 username: username,
             },
-            // What to do if the record is NOT found
+           
             create: {
                 id: userId,
                 username: username,
-                email: user.email, // Populate email on creation
+                email: user.email,
             },
         });
-        // Revalidate the profile page to show the new username immediately
+
         revalidatePath('/profile');
     } catch (error) {
         console.error("Error updating username:", error);

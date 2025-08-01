@@ -27,7 +27,7 @@ export default function EditProfileForm({ userProfile, userId }: EditProfileForm
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-6 bg-white rounded-lg shadow-md">
+        <form onSubmit={handleSubmit} className="p-6 bg-white rounded-lg shadow-md ">
             <div className="mb-4">
                 <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                     Username

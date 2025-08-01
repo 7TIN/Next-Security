@@ -1,6 +1,6 @@
 // app/profile/page.tsx
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import prisma from '@/app/lib/prisma';
 import EditProfileForm from './edit-profile-form'; // We will create this next
