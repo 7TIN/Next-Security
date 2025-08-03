@@ -3,10 +3,10 @@
 import { z } from "zod";
 
 import { createClient } from "@/utils/supabase/server";
-import { updateSession } from "@/utils/supabase/middleware";
+// import { updateSession } from "@/utils/supabase/middleware";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 
 export const forgotPassword = async ({ email }: { email: string }) => {
