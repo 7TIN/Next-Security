@@ -1,23 +1,26 @@
-// app/auth/callback/route.ts
-import { getSupabaseRouteHandler } from '@/app/lib/supabase';
-// import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-// import { cookies } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 
-export async function GET(req: NextRequest) {
-  const requestUrl = new URL(req.url);
-  const code = requestUrl.searchParams.get('code');
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+  const next = searchParams.get("next") ?? "/";
 
   if (code) {
-    // Create a Supabase client that can read/write cookies
-    // const supabase = createRouteHandlerClient({ cookies });
-
-    const supabase = await getSupabaseRouteHandler();
-
-    // Exchange the auth code for a user session
-    await supabase.auth.exchangeCodeForSession(code);
+    const supabase = await createClient();
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) {
+      const forwardedHost = request.headers.get("x-forwarded-host"); 
+      const isLocalEnv = process.env.NODE_ENV === "development";
+      if (isLocalEnv) {
+        return NextResponse.redirect(`${origin}${next}`);
+      } else if (forwardedHost) {
+        return NextResponse.redirect(`https://${forwardedHost}${next}`);
+      } else {
+        return NextResponse.redirect(`${origin}${next}`);
+      }
+    }
   }
 
-  // Redirect the user back to the home page after authentication
-  return NextResponse.redirect(requestUrl.origin);
+  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
 }

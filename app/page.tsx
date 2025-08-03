@@ -1,16 +1,16 @@
-export const dynamic = 'force-dynamic';
+
 // app/page.tsx
-// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-// import { cookies } from 'next/headers';
+
 
 import Link from 'next/link';
 import { signOut } from '@/app/lib/actions';
-import { getSupabaseServerComponent } from './lib/supabase';
+import { createMiddlewareSupabaseClient } from './lib/supabase/middleware';
+
 // import { signOut } from '@/lib/actions'; // Import the server action
 
 export default async function HomePage() {
   // const supabase = createServerComponentClient({ cookies });
-  const supabase = await getSupabaseServerComponent();
+  const supabase = await createMiddlewareSupabaseClient()
   const {
     data: { user },
   } = await supabase.auth.getUser();

@@ -1,16 +1,14 @@
-
-export const dynamic = 'force-dynamic';
 // app/profile/page.tsx
-// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-// import { cookies } from 'next/headers';
+
 import { redirect } from 'next/navigation';
 import prisma from '@/app/lib/prisma';
 import EditProfileForm from './edit-profile-form'; // We will create this next
-import { getSupabaseServerComponent } from '../lib/supabase';
+import { createMiddlewareSupabaseClient } from '../lib/supabase/middleware';
+// import { getSupabaseServerComponent } from '../lib/supabase';
 
 export default async function ProfilePage() {
 //   const supabase = createServerComponentClient({ cookies });
-const supabase = await getSupabaseServerComponent();
+const supabase = await createMiddlewareSupabaseClient();
 
   const {
     data: { user },

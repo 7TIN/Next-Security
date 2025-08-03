@@ -1,109 +1,155 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-// import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { passwordSchema } from "@/validation/passwordSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { loginUser } from "./action";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import GoogleSignin from "./GoogleSignin";
 
-export default function LoginPage() {
-  const supabase = createClientComponentClient();
-//   const router = useRouter();
+const formSchema = z.object({
+  email: z.string().email(),
+  password: passwordSchema,
+});
 
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-//   const [loading, setLoading] = useState(false);
+export default function LoginForm() {
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
+  const router = useRouter();
 
-//   const handleLogin = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     setErrorMsg('');
-//     setLoading(true);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-//     const { error } = await supabase.auth.signInWithPassword({
-//       email,
-//       password,
-//     });
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+    setServerError(null);
+    setIsLoading(true); // Set loading to true when submission starts
 
-//     setLoading(false);
+    try {
+      const response = await loginUser({
+        email: data.email,
+        password: data.password,
+      });
 
-//     if (error) {
-//       setErrorMsg(error.message);
-//     } else {
-//       router.push('/profile');
-//     }
-//   };
-
-  const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${location.origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      setErrorMsg(error.message);
+      if (response.error) {
+        setServerError(response.message);
+      } else {
+        // Redirect to the dashboard page
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      setServerError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false); // Set loading to false when submission ends
     }
   };
 
+  // pass the email value to forget password page
+  const email = form.getValues("email");
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
-      <Link href="/" className="mb-8 text-3xl font-bold text-gray-800">
-        MyApp
-      </Link>
-
-      <div className="w-full max-w-sm bg-gray-50 p-6 rounded-md shadow-md">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Login</h2>
-
-        {/* {errorMsg && (
-          <div className="mb-4 text-red-600 text-sm">{errorMsg}</div>
-        )} */}
-{/* 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full px-4 py-2 border rounded-md focus:outline-none"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 border rounded-md focus:outline-none"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form> */}
-
-        {/* <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600"> Dont have an account?{' '}
-            <Link href="/signup" className="text-blue-600 hover:underline">
-              Sign up
+    <main className="flex justify-center items-center min-h-screen">
+      <Card className="w-[380px]">
+        <CardHeader>
+          <CardTitle>Login</CardTitle>
+          <CardDescription>Login to your account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="flex flex-col gap-2"
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {serverError && (
+                <p className="text-red-500 text-sm mt-2">{serverError}</p>
+              )}
+              {/* <Button type="submit">Register</Button> */}
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                  </>
+                ) : (
+                  "Login"
+                )}
+              </Button>
+              <GoogleSignin />
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className="flex-col gap-2">
+          <div className="text-muted-foreground text-sm">
+            Dont have an account?{" "}
+            <Link href="/register" className="underline">
+              Register
             </Link>
-          </p>
-        </div>
-
-        <div className="my-4 text-center text-gray-500">or</div> */}
-
-        <button
-          onClick={handleGoogleLogin}
-          className="w-full py-2 border text-gray-900 rounded-md hover:bg-gray-100 "
-        >
-          Continue with Google
-        </button>
-      </div>
-    </div>
+          </div>
+          <div className="text-muted-foreground text-sm">
+            Forgot password?{" "}
+            <Link
+              href={`/forgot-password${
+                email ? `?email=${encodeURIComponent(email)}` : ""
+              }`}
+              className="underline"
+            >
+              Reset my password
+            </Link>
+          </div>
+        </CardFooter>
+      </Card>
+    </main>
   );
 }
