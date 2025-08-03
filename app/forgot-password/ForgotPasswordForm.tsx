@@ -5,7 +5,7 @@ import {
   Card,
   CardContent,
   CardDescription,
-//   CardFooter,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -19,53 +19,48 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { resetPasswordFunc } from "./action";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
-// import Link from "next/link";
+import { forgotPassword } from "./action";
 
 const formSchema = z.object({
-  password: z.string().min(6),
-  passwordConfirm: z.string().min(6),
+  email: z.string().email(),
 });
 
-export default function ResetPassword() {
-  const [serverError, setServerError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
+export default function ForgotPasswordForm() {
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      password: "",
-      passwordConfirm: "",
+      email: decodeURIComponent(searchParams.get("email") ?? ""),
     },
   });
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     setServerError(null);
-    setIsLoading(true); // Set loading to true when submission starts
+    setIsLoading(true);
 
     try {
-      const response = await resetPasswordFunc({
-        password: data.password,
-        passwordConfirm: data.passwordConfirm,
-      });
+      const response = await forgotPassword({ email: data.email });
 
       if (response.error) {
         setServerError(response.message);
       } else {
-        console.log("ddd: ", response);
-        // Redirect to the confirmation page
-        router.push("/dashboard");
+        router.push("/forgot-password/confirmation");
       }
     } catch (error) {
       setServerError("An unexpected error occurred. Please try again.");
     } finally {
-      setIsLoading(false); // Set loading to false when submission ends
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +70,7 @@ export default function ResetPassword() {
         <CardHeader>
           <CardTitle>Password Reset</CardTitle>
           <CardDescription>
-            Enter your new password to update your password
+            Enter your email address to reset your password
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -86,25 +81,12 @@ export default function ResetPassword() {
             >
               <FormField
                 control={form.control}
-                name="password"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>New password</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input {...field} type="password" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="passwordConfirm"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password confirm</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="password" />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -113,7 +95,6 @@ export default function ResetPassword() {
               {serverError && (
                 <p className="text-red-500 text-sm mt-2">{serverError}</p>
               )}
-              {/* <Button type="submit">Register</Button> */}
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <>
@@ -121,12 +102,26 @@ export default function ResetPassword() {
                     Please wait
                   </>
                 ) : (
-                  "Submit"
+                  "Forget password"
                 )}
               </Button>
             </form>
           </Form>
         </CardContent>
+        <CardFooter className="flex flex-col gap-2">
+          <div className="text-muted-foreground text-sm">
+            Remember your password?{" "}
+            <Link href="/login" className="underline">
+              Login
+            </Link>
+          </div>
+          <div className="text-muted-foreground text-sm">
+            Don&apos;t have an account?{" "}
+            <Link href="/register" className="underline">
+              Register
+            </Link>
+          </div>
+        </CardFooter>
       </Card>
     </main>
   );
