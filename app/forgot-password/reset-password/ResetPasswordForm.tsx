@@ -37,6 +37,7 @@ export default function ResetPassword() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -50,6 +51,7 @@ export default function ResetPassword() {
 
   useEffect(() => {
     const checkSession = async () => {
+      setLoading(true);
       const type = searchParams.get("type");
       const accessToken = searchParams.get("access_token");
       const supabase = createClient();
@@ -68,6 +70,7 @@ export default function ResetPassword() {
       } else {
         setSessionReady(false);
       }
+      setLoading(false);
     };
 
     checkSession();
@@ -96,8 +99,16 @@ export default function ResetPassword() {
     }
   };
 
-  // Show error if session missing
-  if (!sessionReady) {
+  if (loading) {
+    return (
+      <main className="flex justify-center items-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </main>
+    );
+  }
+
+
+  if (!sessionReady && !loading) {
     return (
       <main className="flex justify-center items-center min-h-screen">
         <Card className="w-[380px]">
