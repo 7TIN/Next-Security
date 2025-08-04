@@ -18,44 +18,53 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { passwordMatchSchema } from "@/validation/passwordMatchSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { forgotPassword } from "./action";
+import { registerUser } from "./action";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
-const formSchema = z.object({
-  email: z.email(),
-});
+const formSchema = z
+  .object({
+    email: z.email(),
+  })
+  .and(passwordMatchSchema);
 
-export default function ForgotPasswordForm() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
+export default function RegisterForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: decodeURIComponent(searchParams.get("email") ?? ""),
+      email: "",
+      password: "",
+      passwordConfirm: "",
     },
   });
+
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     setServerError(null);
     setIsLoading(true);
 
     try {
-      const response = await forgotPassword({ email: data.email });
+      const response = await registerUser({
+        email: data.email,
+        password: data.password,
+        passwordConfirm: data.passwordConfirm,
+      });
 
       if (response.error) {
         setServerError(response.message);
       } else {
-        router.push("/forgot-password/confirmation");
+
+        router.push("/register/confirmation");
       }
     } catch (error) {
       setServerError("An unexpected error occurred. Please try again.");
@@ -68,10 +77,8 @@ export default function ForgotPasswordForm() {
     <main className="flex justify-center items-center min-h-screen">
       <Card className="w-[380px]">
         <CardHeader>
-          <CardTitle>Password Reset</CardTitle>
-          <CardDescription>
-            Enter your email address to reset your password
-          </CardDescription>
+          <CardTitle>Register</CardTitle>
+          <CardDescription>Register for a new account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -92,9 +99,36 @@ export default function ForgotPasswordForm() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="passwordConfirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password confirm</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {serverError && (
                 <p className="text-red-500 text-sm mt-2">{serverError}</p>
               )}
+              {/* <Button type="submit">Register</Button> */}
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <>
@@ -102,23 +136,17 @@ export default function ForgotPasswordForm() {
                     Please wait
                   </>
                 ) : (
-                  "Forget password"
+                  "Register"
                 )}
               </Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="flex flex-col gap-2">
+        <CardFooter className="flex-col gap-2">
           <div className="text-muted-foreground text-sm">
-            Remember your password?{" "}
+            Already have an account?{" "}
             <Link href="/login" className="underline">
               Login
-            </Link>
-          </div>
-          <div className="text-muted-foreground text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="underline">
-              Register
             </Link>
           </div>
         </CardFooter>

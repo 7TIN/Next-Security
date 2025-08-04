@@ -1,26 +1,39 @@
-import { NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
+import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
-export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const token_hash = searchParams.get("token_hash");
+  const type = searchParams.get("type");
+  const code = searchParams.get("code"); // Used for signup confirm/magic link
+  const next = searchParams.get("next") ?? "/dashboard";
 
-  if (code) {
-    const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+  const supabase = await createClient();
+
+  if (token_hash && type === "recovery") {
+    const { error } = await supabase.auth.verifyOtp({
+      type: "recovery",
+      token_hash,
+    });
+
     if (!error) {
-      const forwardedHost = request.headers.get("x-forwarded-host"); 
-      const isLocalEnv = process.env.NODE_ENV === "development";
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`);
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      } else {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
+      return redirect("/forgot-password/reset-password");
+    } else {
+      return redirect("/auth/auth-code-error");
     }
   }
 
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error) {
+      return redirect(next); // Or redirect to "/dashboard"
+    } else {
+      return redirect("/auth/auth-code-error");
+    }
+  }
+
+
+  return redirect("/auth/auth-code-error");
 }
