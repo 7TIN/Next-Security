@@ -1,7 +1,6 @@
 "use server";
 
 import { z } from "zod";
-
 import { createClient } from "@/utils/supabase/server";
 
 export const resetPasswordFunc = async ({
@@ -24,18 +23,22 @@ export const resetPasswordFunc = async ({
   if (!newUserValidation.success) {
     return {
       error: true,
-      message: newUserValidation.error.issues[0]?.message ?? "An error occured",
+      message: newUserValidation.error.issues[0]?.message ?? "An error occurred",
     };
   }
 
-  // supabase authentication from here
+  if (password !== passwordConfirm) {
+    return {
+      error: true,
+      message: "Passwords do not match",
+    };
+  }
+
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.updateUser({
     password: password,
   });
-
-  console.log("data : ", data);
 
   if (error) {
     return {
@@ -44,7 +47,6 @@ export const resetPasswordFunc = async ({
     };
   }
 
-  // User successfully created
   return {
     success: true,
     message: "Password reset successful",
