@@ -5,7 +5,7 @@ import { Suspense } from "react";
 
 export default async function LoginPage() {
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getUser();
   if (data.user) {
     redirect("/dashboard");
   }

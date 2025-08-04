@@ -27,6 +27,7 @@ import { registerUser } from "./action";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 const formSchema = z
   .object({
@@ -48,7 +49,6 @@ export default function RegisterForm() {
     },
   });
 
-
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     setServerError(null);
     setIsLoading(true);
@@ -63,11 +63,11 @@ export default function RegisterForm() {
       if (response.error) {
         setServerError(response.message);
       } else {
-
         router.push("/register/confirmation");
       }
     } catch (error) {
-      setServerError("An unexpected error occurred. Please try again.");
+      setServerError(error.message);
+      toast.error(error.message ?? "Unexpected error");
     } finally {
       setIsLoading(false);
     }

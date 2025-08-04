@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import GoogleSignin from "./GoogleSignin";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.email(),
@@ -64,7 +65,10 @@ export default function LoginForm() {
         router.push("/dashboard");
       }
     } catch (error) {
-      setServerError("An unexpected error occurred. Please try again.");
+      setServerError(error.message);
+      toast.error(
+        error.message ?? "An unexpected error occurred. Please try again."
+      );
     } finally {
       setIsLoading(false); // Set loading to false when submission ends
     }

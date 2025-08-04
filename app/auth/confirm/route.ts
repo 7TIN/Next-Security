@@ -10,10 +10,10 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get("type") as EmailOtpType | null;
   const next = searchParams.get("next") ?? "/";
 
-  if (token_hash && type === "recovery") {
-    // Redirect to your reset password UI
-    redirect(`/reset-password?token_hash=${token_hash}&type=recovery`);
-  }
+  // if (token_hash && type === "recovery") {
+  //   // Redirect to your reset password UI
+  //   redirect(`/reset-password?token_hash=${token_hash}&type=recovery`);
+  // }
 
   if (token_hash && type) {
     const supabase = await createClient();

@@ -30,10 +30,10 @@ export async function GET(request: NextRequest) {
     if (!error) {
       return redirect(next); // Or redirect to "/dashboard"
     } else {
-      return redirect("/auth/auth-code-error");
+      return redirect("/error");
     }
   }
 
 
-  return redirect("/auth/auth-code-error");
+  return redirect("/error");
 }

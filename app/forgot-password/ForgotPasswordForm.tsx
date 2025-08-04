@@ -26,6 +26,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { forgotPassword } from "./action";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.email(),
@@ -58,7 +59,9 @@ export default function ForgotPasswordForm() {
         router.push("/forgot-password/confirmation");
       }
     } catch (error) {
-      setServerError("An unexpected error occurred. Please try again.");
+      setServerError(error.message);
+      toast.error(error.message ?? "An unexpected error occurred. Please try again.");
+      
     } finally {
       setIsLoading(false);
     }

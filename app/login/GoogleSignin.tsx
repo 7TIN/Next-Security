@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { toast } from "sonner"
+import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
@@ -19,12 +19,15 @@ export default function GoogleSignin() {
   async function signInWithGoogle() {
     setIsGoogleLoading(true);
     try {
+
+      const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback${
+        next ? `?next=${encodeURIComponent(next)}` : ""
+      }`;
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback${
-            next ? `?next=${encodeURIComponent(next)}` : ""
-          }`,
+          redirectTo,
         },
       });
 
@@ -32,9 +35,9 @@ export default function GoogleSignin() {
         throw error;
       }
     } catch (error) {
-      toast("Event has been created", {
-          description: "There was an error logging in with Google.",
-        })
+      toast.error(error.message ?? "Event has been created", {
+        description: "There was an error logging in with Google.",
+      });
       setIsGoogleLoading(false);
     }
   }

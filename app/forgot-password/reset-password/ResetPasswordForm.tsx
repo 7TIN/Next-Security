@@ -26,6 +26,7 @@ import { z } from "zod";
 import { resetPasswordFunc } from "./action";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   password: z.string().min(6),
@@ -88,7 +89,8 @@ export default function ResetPassword() {
         router.push("/dashboard");
       }
     } catch (error) {
-      setServerError("An unexpected error occurred. Please try again.");
+      setServerError(error.message);
+      toast.error(error.message ?? "An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }

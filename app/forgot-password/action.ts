@@ -19,6 +19,7 @@ export const forgotPassword = async ({ email }: { email: string }) => {
       error: true,
       message:
         forgotPasswordValidation.error.issues[0]?.message ?? "An error occured",
+        
     };
   }
 
@@ -27,8 +28,10 @@ export const forgotPassword = async ({ email }: { email: string }) => {
 
   // const { error } = await supabase.auth.resetPasswordForEmail(email);
 
+  const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/forgot-password/reset-password`;
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-  redirectTo: 'http://localhost:3000/forgot-password/reset-password'
+  // redirectTo: 'http://localhost:3000/forgot-password/reset-password'
+  redirectTo,
 
 });
   console.log("err: ", error);
