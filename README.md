@@ -131,7 +131,7 @@ Visit **`http://localhost:3000`** in your browser to see your authentication sta
 
 The easiest way to deploy Next-Security is with Vercel. Click the button below to deploy the template instantly.
 
-[](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
 
 Remember to configure your environment variables in the Vercel dashboard and update your Supabase settings with your new Vercel domain.
 
