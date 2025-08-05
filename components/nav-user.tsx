@@ -1,6 +1,5 @@
 "use client";
 
-import { startTransition } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -86,10 +85,9 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                startTransition(() => {
                   logout();
-                });
-              }}
+                }
+              }
             >
               <IconLogout />
               Log out
