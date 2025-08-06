@@ -2,12 +2,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Mail } from "lucide-react";
 import Link from 'next/link';
-export default async function RegistrationConfirmation( {
-  searchParams,
-}: {
-  searchParams: { email?: string };
-}) {
-  const email = await searchParams.email ?? '';
+export default async function RegistrationConfirmation( 
+//   {
+//   searchParams,
+// }: {
+//   searchParams: { email?: string };
+// }
+) {
+  // const email = await searchParams.email ?? '';
   return (
     <main className="flex justify-center items-center min-h-screen ">
       <Card className="w-full max-w-md rounded-xl shadow-sm border border-gray-200 text-center">
@@ -36,9 +38,9 @@ export default async function RegistrationConfirmation( {
 
           <p className="text-gray-700 text-sm mb-4">
             We&apos;ve sent a confirmation link to your email address {" "} 
-            <strong>{email}</strong>. Please check your inbox and click the link to activate your account.
+. Please check your inbox and click the link to activate your account.
           </p>
-          <Link href={`https://mail.google.com/mail/u/${email}/#inbox`} target="_blank" rel="noopener noreferrer">
+          <Link href={`https://mail.google.com/mail/`} target="_blank" rel="noopener noreferrer">
           <button className="w-full bg-black text-white py-2 px-4 rounded-md text-sm font-medium transition hover:opacity-90 mb-6">
             Confirm your email
           </button>
