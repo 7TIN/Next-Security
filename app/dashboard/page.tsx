@@ -18,7 +18,7 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex flex-1 justify-center items-center min-h-screen">
       <Card className="w-[380px] ">
         <CardHeader>
           <CardDescription>

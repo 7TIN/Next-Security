@@ -1,12 +1,16 @@
+'use client'
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Mail } from "lucide-react";
 import Link from 'next/link';
-export default async function RegistrationConfirmation({ searchParams }: { searchParams: { email?: string } }) {
-  const email = searchParams.email;
+import { useSearchParams } from "next/navigation";
+export default function RegistrationConfirmation() {
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email') || '';
   
   return (
-    <main className="flex justify-center items-center min-h-screen bg-[#f9f9f9] px-4">
+    <main className="flex justify-center items-center min-h-screen ">
       <Card className="w-full max-w-md rounded-xl shadow-sm border border-gray-200 text-center">
         <CardHeader className="flex flex-col items-center mt-6 space-y-4">
 
