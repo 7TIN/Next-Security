@@ -1,5 +1,6 @@
 "use client";
 
+import { logout } from "@/app/logout/action";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -22,7 +23,6 @@ import {
   IconLogout,
   IconUserCircle,
 } from "@tabler/icons-react";
-import { logout } from "@/app/logout/action";
 
 export function NavUser({
   user,
@@ -32,7 +32,6 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -83,13 +82,10 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                  logout();
-                }
-              }
-            >
-              <IconLogout />
+            <DropdownMenuItem onClick={() => {
+              logout();
+            }}>
+                <IconLogout />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

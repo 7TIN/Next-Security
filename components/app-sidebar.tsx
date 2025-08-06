@@ -15,7 +15,7 @@ import { Home, LayoutDashboard } from "lucide-react";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { NavUser } from "./nav-user";
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
 
 const items = [
   {
@@ -33,11 +33,10 @@ const items = [
 
 export async function AppSidebar() {
 
-    const supabase = await createClient();
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data?.user) {
-        redirect("/login");
-      }
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+  const user = data?.user;
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader />
@@ -90,7 +89,7 @@ export async function AppSidebar() {
           </SidebarMenu>
       </SidebarFooter> */}
       <SidebarFooter>
-        <NavUser user={{ email : data.user.email!}} />
+        <NavUser user={{ email: user?.email ?? "" }} />
       </SidebarFooter>
 
     </Sidebar>
