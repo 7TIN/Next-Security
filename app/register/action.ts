@@ -37,7 +37,6 @@ export const registerUser = async ({
     };
   }
 
-  // supabase authentication from here
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signUp({
@@ -59,7 +58,6 @@ export const registerUser = async ({
     };
   }
 
-  // User successfully created
   return {
     success: true,
     message: "Check your email for the confirmation link",
