@@ -63,7 +63,7 @@ export default function RegisterForm() {
       if (response.error) {
         setServerError(response.message);
       } else {
-        router.push("/register/confirmation");
+        router.push(`/register/confirmation?email=${encodeURIComponent(data.email)}`);
       }
     } catch (error) {
       setServerError(error.message);

@@ -56,7 +56,9 @@ export default function ForgotPasswordForm() {
       if (response.error) {
         setServerError(response.message);
       } else {
-        router.push("/forgot-password/confirmation");
+        // router.push("/forgot-password/confirmation");
+        router.push(`/forgot-password/confirmation?email=${encodeURIComponent(data.email)}`);
+
       }
     } catch (error) {
       setServerError(error.message);
