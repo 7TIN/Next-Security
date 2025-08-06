@@ -32,15 +32,15 @@ export default function RootLayout({
       >
         {/* use this if you want the navbar */}
         <SidebarProvider>
-          <AppSidebar />
           <main className="flex h-screen w-full">
             <SidebarTrigger />
 
             {/* Full-width container for children */}
             <div className="flex-1 flex items-center justify-center">
-              <div className="w-full max-w-md px-4">{children}</div>
+              {children}
             </div>
           </main>
+          
         </SidebarProvider>
 
         {/* this is for no navbar */}
