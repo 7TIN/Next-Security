@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Mail } from "lucide-react";
 import Link from 'next/link';
-export default function RegistrationConfirmation({ searchParams }: { searchParams: { email?: string } }) {
+export default async function RegistrationConfirmation({ searchParams }: { searchParams: { email?: string } }) {
   const email = searchParams.email;
   
   return (

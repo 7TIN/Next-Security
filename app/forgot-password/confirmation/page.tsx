@@ -34,7 +34,7 @@ export default function RegistrationConfirmation({ searchParams }: { searchParam
   const email = searchParams.email;
   
   return (
-    <main className="flex justify-center items-center min-h-screen bg-[#f9f9f9] px-4">
+    <main className="flex justify-center items-center min-h-screen px-4">
       <Card className="w-full max-w-md rounded-xl shadow-sm border border-gray-200 text-center">
         <CardHeader className="flex flex-col items-center mt-6 space-y-4">
 

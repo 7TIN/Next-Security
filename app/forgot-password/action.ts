@@ -28,36 +28,36 @@ export const forgotPassword = async ({ email }: { email: string }) => {
   
   //find user by all list 
 
-  // const { data: usersList, error: listError } = await supabaseAdmin.auth.admin.listUsers({
+  const { data: usersList, error: listError } = await supabaseAdmin.auth.admin.listUsers({
     // pagination: { perPage: 100, page: 1 } // Optional, default is 50
-  // });
+  });
 
   // Find the user by email
-  // const foundUser = usersList?.users?.find(
-  //   (user) => user.email?.toLowerCase() === email.toLowerCase()
-  // );
+  const foundUser = usersList?.users?.find(
+    (user) => user.email?.toLowerCase() === email.toLowerCase()
+  );
 
   // SQL-Backed .from("users") Query
-  const { data: user, error: notFound } = await supabaseAdmin
-  .from("users")
-  .select("email")
-  .eq("email", email)
-  .single();
+  // const { data: user, error: notFound } = await supabaseAdmin
+  // .from("users")
+  // .select("email")
+  // .eq("email", email)
+  // .single();
 
 
-  // if (listError || !foundUser) {
-  //   return {
-  //     error: true,
-  //     message: "No account found with this email address.",
-  //   };
-  // }
-
-    if (notFound || !user) {
+  if (listError || !foundUser) {
     return {
       error: true,
       message: "No account found with this email address.",
     };
   }
+
+  //   if (notFound || !user) {
+  //   return {
+  //     error: true,
+  //     message: "No account found with this email address.",
+  //   };
+  // }
 
 
   // supabase authentication from here

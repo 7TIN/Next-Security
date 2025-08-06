@@ -28,22 +28,25 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        
-        
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {/* use this if you want the navbar */}
-        {/* <SidebarProvider>
-          <AppSidebar/>
-          <main>
+        <SidebarProvider>
+          <AppSidebar />
+          <main className="flex h-screen w-full">
             <SidebarTrigger />
-            {children}
+
+            {/* Full-width container for children */}
+            <div className="flex-1 flex items-center justify-center">
+              <div className="w-full max-w-md px-4">{children}</div>
+            </div>
           </main>
-        </SidebarProvider> */}
-        
+        </SidebarProvider>
+
         {/* this is for no navbar */}
-          <main>
+        {/* <main>
             {children}
-          </main>
+          </main> */}
 
         <Toaster />
       </body>
