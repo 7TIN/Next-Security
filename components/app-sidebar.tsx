@@ -12,10 +12,9 @@ import {
 } from "@/components/ui/sidebar";
 
 import { Home, LayoutDashboard } from "lucide-react";
-// import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { NavUser } from "./nav-user";
+
 import { createClient } from "@/utils/supabase/server";
-// import { redirect } from "next/navigation";
 
 const items = [
   {

@@ -22,21 +22,22 @@ export default async function Dashboard() {
       <Card className="w-[380px] ">
         <CardHeader>
           <CardDescription>
-              <div>Dashboard</div>
+            <div>Dashboard</div>
           </CardDescription>
-          <div className="flex justify-center">
-                <Avatar>
-                  <AvatarImage
-                    className="rounded-full size-15"
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
-                  />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </div>
+          {/* <div className="flex justify-center"> */}
+
+          {/* </div> */}
         </CardHeader>
-        <CardContent>
-          <p>Hello {data.user.email}</p>
+        <CardContent className="space-y-3">
+          <Avatar>
+            <AvatarImage
+              className="rounded-full size-full "
+              src="https://github.com/shadcn.png"
+              alt="@shadcn"
+            />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <p>Email: {data.user.email}</p>
           <LogoutButton />
         </CardContent>
       </Card>

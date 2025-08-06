@@ -28,15 +28,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SidebarProvider>
-          <AppSidebar />
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        
+        
+        {/* use this if you want the navbar */}
+        {/* <SidebarProvider>
+          <AppSidebar/>
           <main>
             <SidebarTrigger />
             {children}
           </main>
-        </SidebarProvider>
+        </SidebarProvider> */}
+        
+        {/* this is for no navbar */}
+          <main>
+            {children}
+          </main>
+
         <Toaster />
       </body>
     </html>
