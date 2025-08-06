@@ -30,8 +30,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Mail } from "lucide-react";
 import Link from 'next/link';
-export default function RegistrationConfirmation({ searchParams }: { searchParams: { email?: string } }) {
-  const email = searchParams.email;
+export default function RegistrationConfirmation(
+  // { searchParams }: { searchParams: { email?: string } }
+) {
+  // const email = searchParams.email;
   
   return (
     <main className="flex justify-center items-center min-h-screen px-4">
@@ -59,10 +61,10 @@ export default function RegistrationConfirmation({ searchParams }: { searchParam
             <Mail className="h-10 w-10 text-gray-600" />
           </div>
           <p className="text-gray-700 text-sm mb-4">
-            We&apos;ve sent a password reset link to your email address {" "} <strong>{email}</strong>. Please check
+            We&apos;ve sent a password reset link to your email address {" "}. Please check
             your inbox and click the link to reset your password.
           </p>
-          <Link href={`https://mail.google.com/mail/u/${email}/#inbox`} target="_blank" rel="noopener noreferrer">
+          <Link href={`https://mail.google.com/mail/`} target="_blank" rel="noopener noreferrer">
           <button className="w-full bg-black text-white py-2 px-4 rounded-md text-sm font-medium transition hover:opacity-90 mb-6">
             Confirm your email
           </button>
